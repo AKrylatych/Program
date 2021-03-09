@@ -16,9 +16,7 @@ public class Inventory {
 			// Item - specific variables
 		static int hppotions = 0;
 		static int gold = 0;
-		static int[] poteffect = {0,0};
-		static String potlook;
-		static String potlabel;			
+		static int[] poteffect = {0,0};					
 		static String[] potinfo = {"", "", ""};
 		 
 		 

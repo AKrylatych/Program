@@ -304,7 +304,7 @@ public class Engine {
   	
   	static void hubintro() {	// Announces the hub name.
   		
-  		String hubname = Namings.hubname[(int) (Math.random()*(Namings.hubname.length+1))];
+  		String hubname = Namings.hubname[(int) (Math.random()*(Namings.hubname.length))];
   		if (devmode == true)System.out.println("Hubname length: " + Namings.hubname.length);
   		
   		System.out.println();
