@@ -30,6 +30,10 @@ public class Levels {
 		}
 	}
 	
+	static void Crossroads() {
+		// TODO Crossroads
+	}
+	
 	static void Dungeonforgotten() {	// Responsible for the Forgotten Dungeon progression
 		
 		int[] lvldata;
@@ -41,19 +45,24 @@ public class Levels {
 		System.out.println("By completing this dungeon you will increase your ability to read their language,\n and thus, understand their arcane arts.");
 		
 		dungeonsize = (int) (Math.random() * 12) + 5;
-		dungeondiff = 0.6;
+		dungeondiff = 0.7;
 		hubcount = (int) (Math.random() * 3) + 1;	
 		lvldata = LevelGen();
-		for(int i = 1; i < dungeonsize - 1; i++) {
-			Engine.roomaction(lvldata[i]);
+		for(int i = 0; i < dungeonsize; i++) {
+			if (lvldata[i] == 000) {
+				Engine.hublogic();
+			} else Engine.roomaction(lvldata[i]);			
 			// TODO Forgotten progression
 		}
+		Engine.savewrite();
+		mainmenu();
 		System.out.println("	Debug: DungeonForgotten passed");
 	}	
 	
 	static void Dungeoncadet() {	// Responsible for the tutorial dungeon.		
 				
 		//int lvldata[] = {00, 10, 21, 11, 30, 31, 00};
+		dungeondiff = 0.5;
 		System.out.println("You wake up in your comfortable bed");
 		switch(Progresslog.cadetplaytime) {
 		case 0:
@@ -120,7 +129,7 @@ public class Levels {
 		Engine.sleep(1);
 		System.out.println("It does appear to have ");
 		Engine.sleep(1);
-		Engine.roomaction(10);
+		Engine.roomaction(100);
 	}
 	
 	static int[] LevelGen() { 	// Responsible for level generation.

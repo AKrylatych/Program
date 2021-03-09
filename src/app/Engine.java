@@ -21,7 +21,7 @@ public class Engine {
 		Levels.mainmenu();
 	}	
 	
-	static void combat(int enemydata, double difficulty){  
+	static void combat(int enemydata){  
 		// TODO Combat
 	}
 	static void roomaction(int roomdata) {
@@ -43,6 +43,7 @@ public class Engine {
 		 *  	MODIFIED: xy5 specifies that there is large treasure in this room.
 		 *  Format: 000 xyz xyz ... xyz 000
 		 */			
+				
 		Scanner input = new Scanner(System.in);
 		
 		int enemydata;
@@ -52,6 +53,8 @@ public class Engine {
 		String option;
 		String potname;
 		int potionvar;
+		
+		int trapdmg =(int) (10 * Levels.dungeondiff);
 		
 		enemydata = (roomdata/10) % 10;
 		roomtype = roomdata/100;
@@ -78,7 +81,7 @@ public class Engine {
 		}
 		if(enemydata == 1 || enemydata == 2 || enemydata == 3) {
 			System.out.println("You have encountered an enemy!");
-			combat(enemydata, Levels.dungeondiff);		
+			combat(enemydata);		
 		}
 		switch(eventtype) {
 		case 0:
@@ -88,9 +91,9 @@ public class Engine {
 			System.out.println("A huge treasure chest! Do you want to open it?");
 			response = request();
 			if(response == true) {
-				Inventory.hp -= 10;
+				Inventory.hp -= trapdmg;
 				System.out.println("It was a trap!");
-				System.out.println("You have lost 10 HP.");
+				System.out.println("You have lost " + trapdmg + " HP");
 				System.out.println("Your current hp: " + Inventory.hp);
 			}
 			break;
@@ -130,13 +133,28 @@ public class Engine {
 				break;
 			}
 		case 3:
-			System.out.println("undeveloped");
+			System.out.println("You find a small bag of gold on a rock. Do you pick it up?");
+			response = request();
+			if (response == true) {
+				Inventory.gold += 10 * Levels.dungeondiff;
+				System.out.println("You picked up the coins.");
+			}
 			break;
 		case 4:
-			System.out.println("undeveloped");
+			System.out.println("You find a medium - sized bag of gold. Do you pick it up?");
+			response = request();
+			if (response == true) {
+				Inventory.gold += 30 * Levels.dungeondiff;
+				System.out.println("You picked up the coins.");
+			}
 			break;
 		case 5:
-			System.out.println("undeveloped");
+			System.out.println("A huge treasure chest! Do you want to open it?");
+			response = request();
+			if (response == true) {
+				Inventory.gold += 60 * Levels.dungeondiff;
+				System.out.println("You picked up the coins.");
+			}
 			break;
 		default:
 			System.out.println("Please input a valid response.");
@@ -423,7 +441,7 @@ public class Engine {
 	
 	static boolean buylogic(int price) {	// Handles the buying logic
 		if(Inventory.gold >= price) {
-			Inventory.gold = Inventory.gold - price;
+			Inventory.gold = (int) (Inventory.gold - price*Levels.dungeondiff);
 			System.out.println("Purchased item for " + price + " gold.");
 			System.out.println("Current gold: " + Inventory.gold);	
 			return true;
@@ -446,32 +464,40 @@ public class Engine {
 		System.out.println("Bomb: 15 Gold [B]");
 		System.out.println("Health potion: 8 Gold [H]");
 		System.out.println();
+		System.out.println("Current gold: " + Inventory.gold);
+		System.out.println();
 		System.out.println("Leave: [L]");
 		response = input.nextLine();
 		switch (response) {	// Checks for lowercase and UPPERCASE
 		case("W"):
 		case("w"):
 			if(buylogic(10) == true) Inventory.weapon++;	
+			shoplogic();
 			break;
 		case("A"):
 		case("a"):
 			if(buylogic(5) == true) Inventory.boots++;
+			shoplogic();
 			break;
 		case("T"):
 		case("t"):
 			if(buylogic(1) == true) Inventory.slotfill("Torch");
+			shoplogic();
 			break;
 		case("P"):
 		case("p"):
 			if(buylogic(0) == true) Inventory.slotfill("Pebble");
+			shoplogic();
 			break;
 		case("B"):
 		case("b"):
 			if(buylogic(15) == true) Inventory.slotfill("Bomb");
+			shoplogic();
 			break;
 		case("H"):
 		case("h"):			
 			if(buylogic(10) == true) Inventory.hppotions++;		
+			shoplogic();
 		case("L"):
 		case("l"):
 			hublogic();

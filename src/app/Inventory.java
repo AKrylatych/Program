@@ -16,11 +16,11 @@ public class Inventory {
 			// Item - specific variables
 		static int hppotions = 0;
 		static int gold = 0;
-		static int[] poteffect = {0,0};					
+		static int[] poteffect = {0,0};	// Duration - Effect					
 		static String[] potinfo = {"", "", ""};
 		 
 		 
-	static void gearstatus() {	// Declares the inventory and qualities (if exist)
+	static void gearstatus() {	// Declares the inventory and qualities (if exist)		
 		
 		System.out.println("Your current inventory:");
 		System.out.println();
@@ -113,6 +113,97 @@ public class Inventory {
 		System.out.println("Current gold: " + gold);
 		Engine.sleep(1);
 		System.out.println("Health potions: " + hppotions);
+		
+		invaction();
+		
+		
+	}
+	
+	static void invaction() {
+		
+		Scanner input = new Scanner(System.in);
+		
+		String multiresponse;
+		boolean validresponse = true;
+		int hprestored;
+		
+		System.out.println("What do you wish to do?");
+		System.out.print("Exit inventory [E] || Drink Health Potions [H] ");
+		if(potinfo[0] != ""){
+			System.out.print("|| Use Potions [P]");		
+		}
+		System.out.println();
+		
+		do {
+			multiresponse = input.nextLine();
+			switch (multiresponse) {
+			case "E":
+			case "e":
+				break;
+			case "H":
+			case "h":				
+				if(hppotions > 0) {					
+					System.out.println("You drank a health potion.");
+					System.out.println("You have " + hppotions + " health potions left.");
+					hppotions -= 1;
+					hprestored = (int) ((Math.random()*35)+15);
+					hp += hprestored;
+					System.out.println("Health restored: " + hprestored);
+					System.out.println("Current health: " + hp);
+				} else {
+					System.out.println("You don't have any health potions to drink.");
+				}
+				invaction();
+				break;
+			case "P":
+			case "p":
+				switch(potinfo[2]) {
+				case "0":
+					poteffect[1] = (int) ((Math.random()*7)+3);
+					poteffect[2] = 0;
+					break;
+				case "1":
+					poteffect[1] = (int) ((Math.random()*8)+4);
+					poteffect[2] = 1;
+					break;
+				case "2":
+					poteffect[1] = (int) ((Math.random()*6)+4);
+					poteffect[2] = 2;
+					break;
+				case "3":
+					poteffect[1] = (int) ((Math.random()*6)+2);
+					poteffect[2] = 3;
+					break;
+				case "4":
+					poteffect[1] = (int) ((Math.random()*5)+3);
+					poteffect[2] = 4;
+					break;
+				case "5":
+					poteffect[1] = 4;
+					poteffect[2] = 5;
+					break;
+				case "6":
+					poteffect[1] = 99;
+					poteffect[2] = 6;
+				case "7":
+					poteffect[1] = 0;
+					poteffect[2] = 7;
+				case "8":
+					poteffect[1] = (int) ((Math.random()*8)+1);
+					poteffect[2] = 8;
+				case "9":
+					poteffect[1] = Levels.dungeonsize;
+					poteffect[2] = 9;
+					break;
+				}
+				invaction();
+			default:
+				System.out.println("Please input a valid response.");
+				validresponse = false;
+				break;
+			}
+		} while (validresponse == false);
+		
 	}
 	
 	static void slotfill(String item) {
