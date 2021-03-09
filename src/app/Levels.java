@@ -120,7 +120,7 @@ public class Levels {
 		Engine.sleep(1);
 		System.out.println("It does appear to have ");
 		Engine.sleep(1);
-		Engine.roomaction(123);
+		Engine.roomaction(10);
 	}
 	
 	static int[] LevelGen() { 	// Responsible for level generation.
@@ -172,6 +172,7 @@ public class Levels {
 	
 	static void mainmenu() {	// Responsible for the main progression			
 			// Main menu
+		
 		System.out.println("Welcome. This is a rogue-like text-based RPG game.");
 		Engine.sleep(1);
 		System.out.println("You control your character by entering your desired action when prompted.");

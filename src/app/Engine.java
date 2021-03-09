@@ -26,20 +26,48 @@ public class Engine {
 	}
 	static void roomaction(int roomdata) {
 		
+		/* 				DOCUMENTATION
+		 *  0 is the value for the hub
+		 * 	1 is the value for the small room
+		 *  2 is the value for the medium room
+		 *  3 is the value for the large room
+		 *  x 0/1 specifies if the room has an enemy
+		 *  x 0/2 specifies if...
+		 *  	MODIFIED: xy 0 specifies that there is no event in this room.
+		 *  	MODIFIED: xy 1 specifies that there is a trap in this room.
+		 *  	MODIFIED: xy 2 specifies that there is no event in this room.
+		 *  Format: 00 xy xy ... xy 00
+		 */
+		
 		int enemydata;
 		int roomtype;
-		//int event;
 		
 		enemydata = roomdata%10;
 		roomtype = roomdata/10;
-		//event = roomdata%10;
+		
+		if(devmode == true) {
+			System.out.println("Enemy data: " + enemydata);
+			System.out.println("Room type: " + roomtype);
+		}
 		
 		System.out.println();
 		
-		System.out.println("Enemy data: " + enemydata);
-		System.out.println("Room type: " + roomtype);
-		//System.out.println("Room type: " + event);	
+		switch(roomtype) {
+		case 1:
+			System.out.println("You are in a small room.");
+			break;
+		case 2:
+			System.out.println("You are in medium-sized room.");
+			break;
+		case 3:
+			System.out.println("You are in a large room.");
+			break;
+		}
+		if(enemydata == 1) {
+			System.out.println("You have encountered an enemy!");
+			combat();
 		
+		}
 	}
 	
 	static void savewrite() {	// Writes to save file
