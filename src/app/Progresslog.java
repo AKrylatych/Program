@@ -5,7 +5,7 @@ public class Progresslog	{	// Player progress dump
 	static int progresscount = 12;
 	
 		// General progression
-	static int xploredrooms = 0;
+	static int xploredrooms = 5;
 	static int dmgsoaked = 0;
 	static int dmgdealt = 0;
 	static int playtime = 0;
