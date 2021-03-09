@@ -21,36 +21,49 @@ public class Engine {
 		Levels.mainmenu();
 	}	
 	
-	static void combat(){  
+	static void combat(int enemydata, double difficulty){  
 		// TODO Combat
 	}
 	static void roomaction(int roomdata) {
 		
 		/* 				DOCUMENTATION
-		 *  0 is the value for the hub
-		 * 	1 is the value for the small room
-		 *  2 is the value for the medium room
-		 *  3 is the value for the large room
-		 *  x 0/1 specifies if the room has an enemy
-		 *  x 0/2 specifies if...
-		 *  	MODIFIED: xy 0 specifies that there is no event in this room.
-		 *  	MODIFIED: xy 1 specifies that there is a trap in this room.
-		 *  	MODIFIED: xy 2 specifies that there is no event in this room.
-		 *  Format: 00 xy xy ... xy 00
-		 */
+		 *  0yz is the value for the hub
+		 * 	1yz is the value for the small room
+		 *  2yz is the value for the medium room
+		 *  3yz is the value for the large room
+		 *  x1z specifies if the room has an enemy
+		 *  x2z specifies if the room has a strong enemy
+		 *  x3z specifies if the room has a Boss enemy
+		 *  x4z specifies if the room has a 
+		 *  	MODIFIED: xy0 specifies that there is no event in this room.
+		 *  	MODIFIED: xy1 specifies that there is a trap in this room.
+		 *  	MODIFIED: xy2 specifies that there is a potion.
+		 *  	MODIFIED: xy3 specifies that there is small treasure in this room.
+		 *  	MODIFIED: xy4 specifies that there is medium treasure in this room.
+		 *  	MODIFIED: xy5 specifies that there is large treasure in this room.
+		 *  Format: 000 xyz xyz ... xyz 000
+		 */			
+		Scanner input = new Scanner(System.in);
 		
 		int enemydata;
 		int roomtype;
+		int eventtype;
+		boolean response;
+		String option;
+		String potname;
+		int potionvar;
 		
-		enemydata = roomdata%10;
-		roomtype = roomdata/10;
-		
-		if(devmode == true) {
-			System.out.println("Enemy data: " + enemydata);
-			System.out.println("Room type: " + roomtype);
-		}
+		enemydata = (roomdata/10) % 10;
+		roomtype = roomdata/100;
+		eventtype = (roomdata%100)%10;
 		
 		System.out.println();
+		
+		if(devmode == true) {
+			System.out.println("Room type: " + roomtype);
+			System.out.println("Enemy data: " + enemydata);			
+			System.out.println("event type: " + eventtype);
+		}		
 		
 		switch(roomtype) {
 		case 1:
@@ -63,12 +76,74 @@ public class Engine {
 			System.out.println("You are in a large room.");
 			break;
 		}
-		if(enemydata == 1) {
+		if(enemydata == 1 || enemydata == 2 || enemydata == 3) {
 			System.out.println("You have encountered an enemy!");
-			combat();
+			combat(enemydata, Levels.dungeondiff);		
+		}
+		switch(eventtype) {
+		case 0:
+			System.out.println("Doesn't seem to be anything interesting in here.");
+			break;
+		case 1:
+			System.out.println("A huge treasure chest! Do you want to open it?");
+			response = request();
+			if(response == true) {
+				Inventory.hp -= 10;
+				System.out.println("It was a trap!");
+				System.out.println("You have lost 10 HP.");
+				System.out.println("Your current hp: " + Inventory.hp);
+			}
+			break;
+		case 2:
+			System.out.println("You find a potion on the floor.");
+			potionvar = (int) (Math.random() * Namings.potiontypes.length);		
+			Inventory.potinfo[0] = Namings.potiontypes[potionvar];	
+			Inventory.potinfo[1] = Namings.potioneffects[potionvar];	
+			Inventory.potinfo[2] = String.valueOf(potionvar);				
+			System.out.println("It's a " + Inventory.potinfo[0]);
+			System.out.println("The label reads: " + Inventory.potinfo[1]);
+			System.out.println("What do you want to do with it?");
+			System.out.println("Leave it [L] || Drink it [D] || Keep it [K]");
+			option = input.nextLine();
+			switch (option) {
+			case "L":				
+			case "l":
+				System.out.println("Probably would've done more harm than good anyway.");
+				break;
+			case "D":				
+			case "d":			
+				System.out.println("Do you REALLY want to drink this potion?");
+				response = request();
+				if (response == true) {
+					System.out.println("You drink the potion.");
+					Inventory.poteffect[0] = potionvar;
+					Inventory.poteffect[1] = (int) (Math.random()*8)+2;
+				} else System.out.println("Very well.");			
+				break;
+			case "K":
+			case "k":
+				System.out.println("You decide to keep it for later use.");
+				Inventory.slotfill(Inventory.potinfo[1]);
+				break;
+			default:
+				System.out.println("Please input a valid response.");
+				break;
+			}
+		case 3:
+			System.out.println("undeveloped");
+			break;
+		case 4:
+			System.out.println("undeveloped");
+			break;
+		case 5:
+			System.out.println("undeveloped");
+			break;
+		default:
+			System.out.println("Please input a valid response.");
+			break;
 		
 		}
-	}
+	}	
 	
 	static void savewrite() {	// Writes to save file
 		
@@ -229,7 +304,7 @@ public class Engine {
   	
   	static void hubintro() {	// Announces the hub name.
   		
-  		String hubname = Namings.hubname[(int) (Math.random()*Namings.hubname.length)];
+  		String hubname = Namings.hubname[(int) (Math.random()*(Namings.hubname.length+1))];
   		if (devmode == true)System.out.println("Hubname length: " + Namings.hubname.length);
   		
   		System.out.println();
@@ -384,15 +459,15 @@ public class Engine {
 			break;
 		case("T"):
 		case("t"):
-			if(buylogic(1) == true) Inventory.slot1++;
+			if(buylogic(1) == true) Inventory.slotfill("Torch");
 			break;
 		case("P"):
 		case("p"):
-			if(buylogic(0) == true) Inventory.slot2++;
+			if(buylogic(0) == true) Inventory.slotfill("Pebble");
 			break;
 		case("B"):
 		case("b"):
-			if(buylogic(15) == true) Inventory.slot3++;
+			if(buylogic(15) == true) Inventory.slotfill("Bomb");
 			break;
 		case("H"):
 		case("h"):			
@@ -421,4 +496,5 @@ public class Engine {
 		System.out.println("Alchem");
 		hublogic();
 	}
+	
 }

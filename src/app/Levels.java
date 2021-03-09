@@ -40,7 +40,7 @@ public class Levels {
 		System.out.println("The Forgotten dungeon is an EASY dungeon in which every book you find contains sacred text of a civilization,\n whose language is long forgotten, but their magical powers have anything but dwindled.");
 		System.out.println("By completing this dungeon you will increase your ability to read their language,\n and thus, understand their arcane arts.");
 		
-		dungeonsize = (int) (Math.random() * 8) + 3;
+		dungeonsize = (int) (Math.random() * 12) + 5;
 		dungeondiff = 0.6;
 		hubcount = (int) (Math.random() * 3) + 1;	
 		lvldata = LevelGen();
@@ -100,7 +100,7 @@ public class Levels {
 		Engine.sleep(5);
 		System.out.println("Your hub level increases as you encounter more and more hubs.");
 		System.out.println("As your hub level increases, your options in these hubs increase aswell.");
-		System.out.println("Your current Hub level: " + Progresslog.hublevel);
+		System.out.println("Your current Hub level is: " + Progresslog.hublevel);
 		Engine.sleep(5);
 		Engine.hublogic();		
 		System.out.println("Your progress is saved after you rest, so be sure to rest before you set off.");
@@ -126,49 +126,61 @@ public class Levels {
 	static int[] LevelGen() { 	// Responsible for level generation.
 			
 /* 				DOCUMENTATION
- *  0 is the value for the hub
- * 	1 is the value for the small room
- *  2 is the value for the medium room
- *  3 is the value for the large room
- *  x 0/1 specifies if the room has an enemy
- *  x 0/2 specifies if...
- *  	MODIFIED: xy 0 specifies that there is no event in this room.
- *  	MODIFIED: xy 1 specifies that there is a trap in this room.
- *  	MODIFIED: xy 2 specifies that there is no event in this room.
- *  Format: 00 xy xy ... xy 00
+ *  0yz is the value for the hub
+ * 	1yz is the value for the small room
+ *  2yz is the value for the medium room
+ *  3yz is the value for the large room
+ *  	x1z specifies if the room has an enemy
+ * 		x2z specifies if the room has a strong enemy
+ *  	x3z specifies if the room has a Boss enemy 
+ *  		xy0 specifies that there is no event in this room.
+ *  		xy1 specifies that there is a trap in this room.
+ *  		xy2 specifies that there is no event in this room.
+ *  		xy3 specifies that there is small treasure in this room.
+ *  		xy4 specifies that there is medium treasure in this room.
+ *  		xy5 specifies that there is large treasure in this room.
+ *  Format: 000 xyz xyz ... xyz 000
  */		
 		System.out.println("Dungeon size integer: " + dungeonsize);
 		int lvldata[];		
 		int enemychance;
 		int spawnthreshold = 70;
+		int eventtype;
 		lvldata = new int[dungeonsize];	
 		System.out.println();
 		System.out.println("Enemy spawn threshold: " + spawnthreshold);
 		System.out.println();
+		
 		for(int i = 0; i < dungeonsize; i++) {
-			lvldata[i] = (int) ((Math.random() * 4) + 1);
-			lvldata[i] = lvldata[i]*10;
-			enemychance = (int) ((Math.random() * 101) + (100-spawnthreshold));
-			if (enemychance > 50) {
-				lvldata[i]+=1;
-			}	
+			lvldata[i] = (int) ((Math.random() * 4) + 1);	// Sets the dungeon type
+			lvldata[i] *= 100;	// Adjusts the value
+			enemychance = (int) (Math.random() * 101);
+			lvldata[i] += (int) (Math.random() * 6);
+			
+			if (enemychance > 40) {
+				lvldata[i] += 10;
+			}
+			if (enemychance > 60) {
+				lvldata[i] += 20;
+			}
+			if (enemychance > 90) {
+				lvldata[i] += 30;
+			}
 			if (Engine.devmode == true) {
-				System.out.println("--Loop " + (i+1) + "--");
-				System.out.print("Leveldata: " + lvldata[i]);
 				System.out.println();
+				System.out.println("--Loop " + (i + 1) + "--");
+				System.out.print("Leveldata: " + lvldata[i] +", ");			
 				System.out.print("Enemychance: " + enemychance);
-				System.out.print(", Enemylocation: " + lvldata[i]%10);
-				System.out.println("	Debug: LevelGen cycle " + i + " passed");
+				System.out.print(", Roomtype: " + lvldata[i] / 100);
+				System.out.print(", Enemylocation: " + (lvldata[i]/10) % 10);
+				System.out.print(", Eventtype: " + (lvldata[i] % 100) % 10);
+				System.out.println("	LevelGen cycle " + i + " passed");
 			}
 		}
-		lvldata[0] = 00;	// Sets the first and the last as hubs
-		lvldata[(dungeonsize-1)] = 00;		
+		lvldata[0] = 000;	// Sets the first and the last as hubs
+		lvldata[(dungeonsize-1)] = 000;		
 		return lvldata;
 	}	
-	
-	static void LevelAction(int[] lvldata) {	// Handles the level action
-		// TODO Level action
-	}
 	
 	static void mainmenu() {	// Responsible for the main progression			
 			// Main menu
