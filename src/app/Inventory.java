@@ -9,8 +9,11 @@ public class Inventory {
 		static int boots = 0;
 		static int shield = 0;
 		static String slot1 = "Empty";
+		static int slot1type = 0;	
 		static String slot2 = "Empty";
-		static String slot3 = "Empty";		
+		static int slot2type = 0;	
+		static String slot3 = "Empty";
+		static int slot3type = 0;	
 		static int hp = 100;
 		
 			// Item - specific variables
@@ -124,17 +127,16 @@ public class Inventory {
 		Scanner input = new Scanner(System.in);
 		
 		String multiresponse;
-		boolean validresponse = true;
+		boolean validresponse;
 		int hprestored;
 		
 		System.out.println("What do you wish to do?");
 		System.out.print("Exit inventory [E] || Drink Health Potions [H] ");
-		if(potinfo[0] != ""){
-			System.out.print("|| Use Potions [P]");		
-		}
+		if(potinfo[0] != "") System.out.print("|| Use Potions [P]");		
 		System.out.println();
 		
 		do {
+			validresponse = true;
 			multiresponse = input.nextLine();
 			switch (multiresponse) {
 			case "E":
@@ -142,7 +144,7 @@ public class Inventory {
 				break;
 			case "H":
 			case "h":				
-				if(hppotions > 0) {					
+				if(hppotions > 0 & hp <= 100) {					
 					System.out.println("You drank a health potion.");
 					System.out.println("You have " + hppotions + " health potions left.");
 					hppotions -= 1;
@@ -151,52 +153,68 @@ public class Inventory {
 					System.out.println("Health restored: " + hprestored);
 					System.out.println("Current health: " + hp);
 				} else {
-					System.out.println("You don't have any health potions to drink.");
+					if(hppotions < 0)System.out.println("You don't have any health potions to drink.");
+					if(hp >= 100)System.out.println("You're healthy enough.");
 				}
 				invaction();
 				break;
 			case "P":
 			case "p":
-				switch(potinfo[2]) {
-				case "0":
-					poteffect[1] = (int) ((Math.random()*7)+3);
-					poteffect[2] = 0;
-					break;
-				case "1":
-					poteffect[1] = (int) ((Math.random()*8)+4);
-					poteffect[2] = 1;
-					break;
-				case "2":
-					poteffect[1] = (int) ((Math.random()*6)+4);
-					poteffect[2] = 2;
-					break;
-				case "3":
-					poteffect[1] = (int) ((Math.random()*6)+2);
-					poteffect[2] = 3;
-					break;
-				case "4":
-					poteffect[1] = (int) ((Math.random()*5)+3);
-					poteffect[2] = 4;
-					break;
-				case "5":
-					poteffect[1] = 4;
-					poteffect[2] = 5;
-					break;
-				case "6":
-					poteffect[1] = 99;
-					poteffect[2] = 6;
-				case "7":
-					poteffect[1] = 0;
-					poteffect[2] = 7;
-				case "8":
-					poteffect[1] = (int) ((Math.random()*8)+1);
-					poteffect[2] = 8;
-				case "9":
-					poteffect[1] = Levels.dungeonsize;
-					poteffect[2] = 9;
-					break;
-				}
+				//if (slot1 || slot2 || slot3) {
+					switch(potinfo[2]) {
+					case "0":
+						poteffect[0] = (int) ((Math.random()*7)+3);
+						poteffect[1] = 0;
+						potreset();
+						break;
+					case "1":
+						poteffect[0] = (int) ((Math.random()*8)+4);
+						poteffect[1] = 1;
+						potreset();
+						break;
+					case "2":
+						poteffect[0] = (int) ((Math.random()*6)+4);
+						poteffect[1] = 2;
+						potreset();
+						break;
+					case "3":
+						poteffect[0] = (int) ((Math.random()*6)+2);
+						poteffect[1] = 3;
+						potreset();
+						break;
+					case "4":
+						poteffect[0] = (int) ((Math.random()*5)+3);
+						poteffect[1] = 4;
+						potreset();
+						break;
+					case "5":
+						poteffect[0] = 4;
+						poteffect[1] = 5;
+						potreset();
+						break;
+					case "6":
+						poteffect[0] = 99;
+						poteffect[1] = 6;
+						potreset();
+					case "7":
+						poteffect[0] = 0;
+						poteffect[1] = 7;
+						potreset();
+						break;
+					case "8":
+						poteffect[0] = (int) ((Math.random()*8)+1);
+						poteffect[1] = 8;
+						potreset();
+						break;
+					case "9":
+						poteffect[0] = Levels.dungeonsize;
+						poteffect[1] = 9;
+						potreset();
+						break;
+					}					
+				
 				invaction();
+				break;
 			default:
 				System.out.println("Please input a valid response.");
 				validresponse = false;
@@ -205,6 +223,10 @@ public class Inventory {
 		} while (validresponse == false);
 		
 	}
+	static void potreset() {
+		for (int i = 0; i < 3; i++) potinfo[i] = "";
+
+	}
 	
 	static void slotfill(String item) {
 		
@@ -212,116 +234,96 @@ public class Inventory {
 		
 		String response;
 		boolean boolresponse;
-		boolean validresponse = true;
+		boolean validresponse;
 		
-		if(slot1 != "Empty" & slot2 != "Empty" & slot3 != "Empty") {
-			System.out.println("All your slots are full. Do you wish to discard an older item and put your new item in it's place?");
-			boolresponse = Engine.request();
-			if(boolresponse == true) {
-				System.out.println("Which item would you like to discard?");
-				System.out.println("[1]: " + slot1);
-				System.out.println("[2]: " + slot2);
-				System.out.println("[3]: " + slot3);
-				System.out.println("Don't discard [D]");
-				do {
-					response = input.nextLine();				
-					switch(response) {
-					case "1":
-						itemdiscard(slot1, "slot");	
+		System.out.println("Which slot do you want to equip your item to?");
+		System.out.println("[1]: " + slot1);
+		System.out.println("[2]: " + slot2);
+		System.out.println("[3]: " + slot3);
+		do {
+			validresponse = true;
+			response = input.nextLine();
+			switch(response) {
+			case "1":
+				if(slot1 == "Empty") {
+					slot1 = item;
+					System.out.println("\"" + item +"\"" + " Equipped in slot 1.");
+				} else if(slot1 != "Empty") {
+					System.out.println("Slot is full. Do you want to replace it?");
+					boolresponse = Engine.request();
+					if (boolresponse == true) {
 						slot1 = item;
-						break;
-					case "2":
-						itemdiscard(slot2, "slot");	
-						slot2 = item;
-						break;
-					case "3":
-						itemdiscard(slot3, "slot");	
-						slot3 = item;
-						break;
-					case "D":
-					case "d":
-						System.out.println("Are you sure you don't want to discard any items?");
-					default:
-						System.out.println("Please input a valid response.");
-						validresponse = false;
-						break;
-					}
-				} while (validresponse == false);
-				validresponse = true;
-			} else System.out.println("None of the current items will be discarded.");
-			
-		} else {
-			
-			System.out.println("Which slot do you want to equip your item to?");
-			System.out.println("[1]: " + slot1);
-			System.out.println("[2]: " + slot2);
-			System.out.println("[3]: " + slot3);
-			do {
-				response = input.nextLine();
-				switch(response) {
-				case "1":
-					if(slot1 == "Empty") {
-						slot1 = item;
-						System.out.println(item + " Equipped in slot 1.");
-					} else {
-						System.out.println("Slot is full. Please select another slot.");
-						slotfill(item);
-					}
-					break;
-				case "2":
-					if(slot2 == "Empty") {
-						slot2 = item;
-						System.out.println(item + " Equipped in slot 1.");
-					} else {
-						System.out.println("Slot is full. Please select another slot.");
-						slotfill(item);
-					}
-					break;
-				case "3":
-					if(slot3 == "Empty") {
-						slot3 = item;
-						System.out.println(item + " Equipped in slot 1.");
-					} else {
-						System.out.println("Slot is full. Please select another slot.");
-						slotfill(item);
-					}
-					break;
-				default:
-					System.out.println("Please input a valid response.");
-					validresponse = false;
+						System.out.println("\"" + item +"\"" + " Equipped in slot 1.");
+					} else System.out.println("\"" + slot1  +"\""+ " has not been replaced.");
 				}
-			} while (validresponse ==false);
-		}
-		gearstatus();
-	}
-	
-	static void itemdiscard(String discitem, String itemtype) {
-		
-		boolean boolresponse;
-		boolean validresponse = true;
-		
-		System.out.println("Are you sure you want to discard " + discitem + "?");
-		boolresponse = Engine.request();
-		if(boolresponse == true) {			
-			switch(itemtype) {
-			case "slot":
-				discitem = "Empty";
 				break;
-			case "wep":
-				discitem = "0";
+			case "2":
+				if(slot2 == "Empty") {
+					slot2 = item;
+					System.out.println("\"" + item +"\"" + " Equipped in slot 1.");
+				} else if(slot2 != "Empty") {
+					System.out.println("Slot is full. Do you want to replace it?");
+					boolresponse = Engine.request();
+					if (boolresponse == true) {
+						slot2 = item;
+						System.out.println("\"" + item +"\"" + " Equipped in slot 1.");
+					} else System.out.println("\"" + slot2  +"\""+ " has not been replaced.");
+				}
 				break;
-			case "armour":
-				discitem = "0";
+			case "3":
+				if(slot3 == "Empty") {
+					slot3 = item;
+					System.out.println("\"" + item +"\"" + " Equipped in slot 1.");
+				} else if(slot3 != "Empty") {
+					System.out.println("Slot is full. Do you want to replace it?");
+					boolresponse = Engine.request();
+					if (boolresponse == true) {
+						slot3 = item;
+						System.out.println("\"" + item +"\"" + " Equipped in slot 1.");
+					} else System.out.println("\"" + slot3  +"\""+ " has not been replaced.");
+				}
 				break;
-			case "shield":
-				discitem = "0";
-				break;				
 			default:
 				System.out.println("Please input a valid response.");
 				validresponse = false;
 			}
-			System.out.println(discitem + " has been discarded.");
-		} else System.out.println(discitem + " has not been discarded.");
+		} while (validresponse == false);
+	}
+			
+	
+	static void itemdiscard(String discitem, String itemtype) {
+		
+		boolean boolresponse;
+		boolean validresponse;
+		
+		System.out.println("Are you sure you want to discard " + discitem + "?");
+		do {
+			validresponse = true;
+			boolresponse = Engine.request();
+			if(boolresponse == true) {			
+				switch(itemtype) {
+				case "slot":
+					System.out.println(discitem + " has been discarded.");
+					discitem = "Empty";
+					break;
+				case "wep":
+					System.out.println(discitem + " has been discarded.");
+					discitem = "0";
+					break;
+				case "armour":
+					System.out.println(discitem + " has been discarded.");
+					discitem = "0";
+					break;
+				case "shield":
+					System.out.println(discitem + " has been discarded.");
+					discitem = "0";
+					break;				
+				default:
+					System.out.println("Please input a valid response.");
+					validresponse = false;
+				}					
+			} else System.out.println(discitem + " has not been discarded.");
+		} while (validresponse == false);
 	}
 	
 	static void abilities() {

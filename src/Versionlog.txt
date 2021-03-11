@@ -77,8 +77,19 @@ Added potion durations and tagged their effects
 Tweaked the Shop to display current user gold
 Tweaked the Shop to go back to the shop after a purchase.
 Tweaked the Inventory to display health healed and current health after healing
-//
 
+Alpha 0.3.2
+Removed a few unnecessary files
+Added bonus stats for devmode
+Added a few sleep statements
+Tweaked the room action to prompt inventory opening instead of doing it automatically.
+Tweaked the slot equipping to prompt replacement immediatelly.
+Tidyed up a couple of statements
+Fixed the ability to overheal
+Fixed the potion script loop
+Fixed the potion script reset
+Fixed the invalid response loop
+Cut a large portion of exess code
 
 
 

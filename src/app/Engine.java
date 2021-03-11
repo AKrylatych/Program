@@ -11,7 +11,12 @@ public class Engine {
 	
 	public static void main(String[] args) {	
 		
-		if(devmode == true) System.out.println("DEVMODE ON");
+		if(devmode == true) {
+			System.out.println("DEVMODE ON");
+			Inventory.gold = 9999;
+			Inventory.hp = 9999;
+			Inventory.hppotions = 9999;
+		}
 		saveread();
 		Levels.mainmenu(); // Starts the whole program
 	}
@@ -50,8 +55,7 @@ public class Engine {
 		int roomtype;
 		int eventtype;
 		boolean response;
-		String option;
-		String potname;
+		String option;		
 		int potionvar;
 		
 		int trapdmg =(int) (10 * Levels.dungeondiff);
@@ -65,7 +69,7 @@ public class Engine {
 		if(devmode == true) {
 			System.out.println("Room type: " + roomtype);
 			System.out.println("Enemy data: " + enemydata);			
-			System.out.println("event type: " + eventtype);
+			System.out.println("Event type: " + eventtype);
 		}		
 		
 		switch(roomtype) {
@@ -79,10 +83,12 @@ public class Engine {
 			System.out.println("You are in a large room.");
 			break;
 		}
+		sleep(1);
 		if(enemydata == 1 || enemydata == 2 || enemydata == 3) {
 			System.out.println("You have encountered an enemy!");
 			combat(enemydata);		
 		}
+		sleep(1);
 		switch(eventtype) {
 		case 0:
 			System.out.println("Doesn't seem to be anything interesting in here.");
@@ -132,6 +138,9 @@ public class Engine {
 				System.out.println("Please input a valid response.");
 				break;
 			}
+			System.out.println("Do you want to view your current inventory?");
+			response = request();
+			if (response == true) Inventory.gearstatus();			
 		case 3:
 			System.out.println("You find a small bag of gold on a rock. Do you pick it up?");
 			response = request();
@@ -158,8 +167,7 @@ public class Engine {
 			break;
 		default:
 			System.out.println("Please input a valid response.");
-			break;
-		
+			break;		
 		}
 	}	
 	
@@ -330,7 +338,9 @@ public class Engine {
 		System.out.println();
 		sleep(1);		
 		System.out.println("What do you wish to do?");
+		sleep(1);
 		System.out.println("RESTING saves your progress.");
+		sleep(1);
 				
   	}
   	
@@ -349,17 +359,11 @@ public class Engine {
 		
 		if(visited == false) hubintro();	
 		System.out.println();
-		if(Progresslog.hublevel > 0) {	// Options depend on hub level
-			//System.out.println("You are able to ");			
-			if(Progresslog.hublevel > 1) {
-				System.out.println("You have reached the highest hub level.");
-				System.out.println("Leave [L] || Shop [S] || Rest [R] || Inventory [I] || Wizard Tower [W] || Alchemist's abode [A]");
-			} else {				
-				System.out.println("Leave [L] || Shop [S] || Rest [R] || Wizard Tower [W]");			
-			}		
-		} else {						
-			System.out.println("Leave [L] || Shop [S] || Rest [R] || Inventory [I]");
-		}
+		
+		System.out.print("Leave [L] || Shop [S] || Rest [R] || Inventory [I]");
+		if(Progresslog.hublevel > 0) System.out.print(" || Wizard Tower [W]");
+		if(Progresslog.hublevel > 1) System.out.print(" || Alchemist's abode [A]");
+		System.out.println();		
 		request = input.nextLine();
 		switch(request) {
 		case ("L"):
@@ -367,6 +371,7 @@ public class Engine {
 			if(reststatus == false) {
 				System.out.println("Adventurer! You haven't rested in this hub!");
 				System.out.println("If you leave now your progress will not be saved!");
+				sleep(1);
 				System.out.println("Do you wish to rest before your next journey?");
 				response = request();
 				if(response  == true) {
@@ -451,7 +456,12 @@ public class Engine {
 		}		
 		return false;
 	}	
-	
+	static int[] shopgen() {
+		// TODO Shopgen
+		int[] shopitems;
+		shopitems = new int[5];
+		return shopitems;
+	}
 	static void shoplogic() {	// Handles the shop logic in hubs		
 		Scanner input = new Scanner(System.in);
 		String response;
