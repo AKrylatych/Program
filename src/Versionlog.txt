@@ -55,12 +55,12 @@ Adjusted the hublogic to accomodate Wizard tower and Alchemist's abode
 Added a few idea entries
 Added a WIP room action
 
-	GUI: Alpha 0.0.3a	2021- 03- 08
+	GUI: Alpha 0.0.3a	2021-03-08
 Experimented with methods in java swing
 	github test
 	github test 2
 	
-Alpha 0.3
+Alpha 0.3.0		2021-03-09
 Migrated to github
 Experimented with command line launch
 Adjusted the LevelGen to accomodate events
@@ -69,7 +69,7 @@ Added the Room Action function
 Added the slot equipping function
 Added the item discarding function.
 
-Alpha 0.3.1
+Alpha 0.3.1		2021-03-09
 Tied the up the game loop. It... it's almost playable now actually.
 Converted Idea and VersionLog files to .txt
 Tweaked difficulty impact on the dungeon
@@ -78,7 +78,7 @@ Tweaked the Shop to display current user gold
 Tweaked the Shop to go back to the shop after a purchase.
 Tweaked the Inventory to display health healed and current health after healing
 
-Alpha 0.3.2
+Alpha 0.3.2		2021-03-11
 Removed a few unnecessary files
 Added bonus stats for devmode
 Added a few sleep statements
