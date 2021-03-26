@@ -29,6 +29,58 @@ public class Engine {
 	static void combat(int enemydata){  
 		// TODO Combat
 	}
+	static void leveling(int xpgain) {		
+		
+		Scanner input = new Scanner(System.in);
+		String multiresponse;
+		int excessxp;
+		boolean validresponse = false;
+		
+		do { // fix levelling
+			if(devmode == true) {
+				System.out.println("	Playerlevel: " + Inventory.playerlevel);
+				System.out.println("	xpgain: " + xpgain);
+				System.out.println("	xpreq: " + Inventory.playerxpreq);
+			}
+			
+			if(Inventory.playerxp + xpgain >= Inventory.playerxpreq) {
+				Inventory.playerlevel++;
+				System.out.println("Level up! Current level: " + Inventory.playerlevel);			
+				Inventory.playerxp += xpgain;
+				xpgain -= Inventory.playerxpreq;
+				if(devmode==true) System.out.println("	post-xpgain: " + xpgain);
+				
+				Inventory.playerxp -= Inventory.playerxpreq;
+				Inventory.playerxpreq = Inventory.playerlevel * Inventory.playerxpreq;
+				System.out.println("What do you wish to upgrade?");
+				System.out.println("1 - Titaniun abs: Increase max HP (current: " + Inventory.maxhp + ")");
+				System.out.println("2 - Smartass: Decrease Level up XP requirement (current: " + Inventory.playerxpreq + ")");
+				
+				multiresponse = input.nextLine();
+				do {
+					switch(multiresponse) {
+					case "1":
+						Inventory.maxhp  += 20;
+						System.out.println("(current: " + Inventory.maxhp + ")");
+						break;
+					case "2":
+						Inventory.playerxpreq -= 2;
+						System.out.println("(current: " + Inventory.playerxpreq + ")");
+						break;
+					default:
+						System.out.println("Please input a valid response.");
+						validresponse = false;
+						break;
+					}
+				} while (validresponse = false);
+				validresponse = true;
+				
+			} else {
+				Inventory.playerxp += xpgain;
+				System.out.println("+ " + xpgain + " XP");
+			}
+		} while (Inventory.playerxp + xpgain >= Inventory.playerxpreq);
+	}
 	static void roomaction(int roomdata) {
 		
 		/* 				DOCUMENTATION
@@ -36,16 +88,18 @@ public class Engine {
 		 * 	1yz is the value for the small room
 		 *  2yz is the value for the medium room
 		 *  3yz is the value for the large room
-		 *  x1z specifies if the room has an enemy
-		 *  x2z specifies if the room has a strong enemy
-		 *  x3z specifies if the room has a Boss enemy
-		 *  x4z specifies if the room has a 
-		 *  	MODIFIED: xy0 specifies that there is no event in this room.
-		 *  	MODIFIED: xy1 specifies that there is a trap in this room.
-		 *  	MODIFIED: xy2 specifies that there is a potion.
-		 *  	MODIFIED: xy3 specifies that there is small treasure in this room.
-		 *  	MODIFIED: xy4 specifies that there is medium treasure in this room.
-		 *  	MODIFIED: xy5 specifies that there is large treasure in this room.
+		 *  	x1z specifies if the room has an enemy
+		 * 		x2z specifies if the room has a strong enemy
+		 * 		x3z specifies if the room has a Boss enemy
+		 *  	x4z specifies if the room has a 
+		 * 			xy0 specifies that there is no event in this room.
+		 *  		xy1 specifies that there is a trap in this room.
+		 *  		xy2 specifies that there is a potion.
+		 *  		xy3 specifies that there is small treasure in this room.
+		 *  		xy4 specifies that there is medium treasure in this room.
+		 *  		xy5 specifies that there is large treasure in this room.
+		 *  		xy6 specifies the undead trader
+		 *  	
 		 *  Format: 000 xyz xyz ... xyz 000
 		 */			
 				
@@ -101,12 +155,13 @@ public class Engine {
 				System.out.println("It was a trap!");
 				System.out.println("You have lost " + trapdmg + " HP");
 				System.out.println("Your current hp: " + Inventory.hp);
+				leveling( (int) Math.round(10 * Levels.dungeondiff));
 			}
 			break;
 		case 2:
 			System.out.println("You find a potion on the floor.");
 			potionvar = (int) (Math.random() * Namings.potiontypes.length);		
-			Inventory.potinfo[0] = Namings.potiontypes[potionvar];	
+			Inventory.potinfo[0] = Namings.potiontypes[(int) (Math.random() * Namings.potiontypes.length)];	
 			Inventory.potinfo[1] = Namings.potioneffects[potionvar];	
 			Inventory.potinfo[2] = String.valueOf(potionvar);				
 			System.out.println("It's a " + Inventory.potinfo[0]);
@@ -137,10 +192,7 @@ public class Engine {
 			default:
 				System.out.println("Please input a valid response.");
 				break;
-			}
-			System.out.println("Do you want to view your current inventory?");
-			response = request();
-			if (response == true) Inventory.gearstatus();			
+			}	
 		case 3:
 			System.out.println("You find a small bag of gold on a rock. Do you pick it up?");
 			response = request();
@@ -164,10 +216,7 @@ public class Engine {
 				Inventory.gold += 60 * Levels.dungeondiff;
 				System.out.println("You picked up the coins.");
 			}
-			break;
-		default:
-			System.out.println("Please input a valid response.");
-			break;		
+			break;			
 		}
 	}	
 	
@@ -406,7 +455,8 @@ public class Engine {
 				wiztowlogic();
 				break;
 			} else {
-				System.out.println("wiztower\nPlease input a valid response.");
+				if (devmode == true) System.out.println("Wiztower input attempt");
+				System.out.println("Please input a valid response.");
 				visited = true;
 				hublogic();
 				break;
@@ -417,7 +467,8 @@ public class Engine {
 				alchemlogic();
 				break;
 			} else {
-				System.out.println("alchem\nPlease input a valid response.");
+				if (devmode == true) System.out.println("Alchem input attempt");
+				System.out.println("Please input a valid response.");
 				visited = true;
 				hublogic();
 				break;
@@ -468,11 +519,17 @@ public class Engine {
 		visited = true;
 		System.out.println("---Shop---");
 		System.out.println("Weapon upgrade: 10 Gold [W]");
+		sleep(1);
 		System.out.println("Armor upgrade: 5 Gold [A]");
+		sleep(1);
 		System.out.println("Torch: 1 Gold [T]");
+		sleep(1);
 		System.out.println("Pebble: 0 Gold [P]");
+		sleep(1);
 		System.out.println("Bomb: 15 Gold [B]");
+		sleep(1);
 		System.out.println("Health potion: 8 Gold [H]");
+		sleep(1);
 		System.out.println();
 		System.out.println("Current gold: " + Inventory.gold);
 		System.out.println();

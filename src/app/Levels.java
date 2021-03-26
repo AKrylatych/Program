@@ -13,6 +13,8 @@ public class Levels {
 	static int dangerlevel;
 					// General variables
 	static boolean response;
+	static double[] dungeonrewards = {0,0,0};
+	// x gold, x experience, x items, 
 		
 	static void DungeonGen() {	// Responsible for the dungeon type generation. Two to not burn out.
 		
@@ -31,8 +33,33 @@ public class Levels {
 	}
 	
 	static void Crossroads() {
-		// TODO Crossroads
+		switch (dungeontype) {
+		case 0:
+			dungeonrewards[0] = 250 * dungeondiff;
+			dungeonrewards[1] = 300 * dungeondiff;
+			dungeonrewards[2] = 0;
+		case 1:
+		}
+		System.out.println("Dungeon complete!");
+		Engine.sleep(1);
+		System.out.println("Items recieved this run:");
+		Engine.sleep(1);
+		System.out.println(dungeonrewards[0] + " Gold");
+		Inventory.gold += (int) dungeonrewards[0];
+		Engine.sleep(1);
+		System.out.println(dungeonrewards[1] + " Experience");
+		Engine.leveling( (int) dungeonrewards[1]);
+		Engine.sleep(1);		
+		Engine.savewrite();
+		System.out.println("Diving into a brand new adventure!");
+		System.out.print("Loading");
+		for(int i = 0; i <= 3 ; i++) {
+			System.out.print(".");
+			Engine.sleep(1);
+		}
+		DungeonGen();
 	}
+	
 	
 	static void Dungeonforgotten() {	// Responsible for the Forgotten Dungeon progression
 		
@@ -54,9 +81,10 @@ public class Levels {
 			} else Engine.roomaction(lvldata[i]);			
 			// TODO Forgotten progression
 		}
+		Crossroads();
 		Engine.savewrite();
-		mainmenu();
-		System.out.println("	Debug: DungeonForgotten passed");
+		
+		if(Engine.devmode == true) System.out.println("	Debug: DungeonForgotten passed");
 	}	
 	
 	static void Dungeoncadet() {	// Responsible for the tutorial dungeon.		
@@ -155,11 +183,7 @@ public class Levels {
 		int enemychance;
 		int spawnthreshold = 70;
 		int eventtype;
-		lvldata = new int[dungeonsize];	
-		System.out.println();
-		System.out.println("Enemy spawn threshold: " + spawnthreshold);
-		System.out.println();
-		
+		lvldata = new int[dungeonsize];				
 		for(int i = 0; i < dungeonsize; i++) {
 			lvldata[i] = (int) ((Math.random() * 4) + 1);	// Sets the dungeon type
 			lvldata[i] *= 100;	// Adjusts the value
@@ -176,6 +200,7 @@ public class Levels {
 				lvldata[i] += 30;
 			}
 			if (Engine.devmode == true) {
+				System.out.println("Enemy spawn threshold: " + spawnthreshold);	
 				System.out.println();
 				System.out.println("--Loop " + (i + 1) + "--");
 				System.out.print("Leveldata: " + lvldata[i] +", ");			

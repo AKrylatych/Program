@@ -5,22 +5,27 @@ import java.util.Scanner;
 public class Inventory {	
 	
 			// Player stats	
-		static int weapon = 0;
-		static int boots = 0;
-		static int shield = 0;
-		static String slot1 = "Empty";
-		static int slot1type = 0;	
-		static String slot2 = "Empty";
-		static int slot2type = 0;	
-		static String slot3 = "Empty";
-		static int slot3type = 0;	
-		static int hp = 100;
+	static int playerlevel = 1;
+	static int playerxp = 0;
+	static int xpreqmodifier = 20;
+	static int playerxpreq = xpreqmodifier;
+	static int weapon = 0;
+	static int boots = 0;
+	static int shield = 0;
+	static String slot1 = "Empty";
+	static int slot1type = 0;	
+	static String slot2 = "Empty";
+	static int slot2type = 0;	
+	static String slot3 = "Empty";
+	static int slot3type = 0;	
+	static int maxhp = 100;
+	static int hp = 100;
 		
-			// Item - specific variables
-		static int hppotions = 0;
-		static int gold = 0;
-		static int[] poteffect = {0,0};	// Duration - Effect					
-		static String[] potinfo = {"", "", ""};
+		// Item - specific variables
+	static int hppotions = 0;
+	static int gold = 0;
+	static int[] poteffect = {0,0};	// Duration - Effect					
+	static String[] potinfo = {"", "", ""};
 		 
 		 
 	static void gearstatus() {	// Declares the inventory and qualities (if exist)		
@@ -131,7 +136,8 @@ public class Inventory {
 		int hprestored;
 		
 		System.out.println("What do you wish to do?");
-		System.out.print("Exit inventory [E] || Drink Health Potions [H] ");
+		System.out.print("Exit inventory [E] ");
+		if(hppotions > 0) System.out.print("|| Drink Health Potions [H] ");
 		if(potinfo[0] != "") System.out.print("|| Use Potions [P]");		
 		System.out.println();
 		
@@ -144,7 +150,7 @@ public class Inventory {
 				break;
 			case "H":
 			case "h":				
-				if(hppotions > 0 & hp <= 100) {					
+				if(hppotions > 0 & hp <= maxhp) {					
 					System.out.println("You drank a health potion.");
 					System.out.println("You have " + hppotions + " health potions left.");
 					hppotions -= 1;
@@ -154,7 +160,7 @@ public class Inventory {
 					System.out.println("Current health: " + hp);
 				} else {
 					if(hppotions < 0)System.out.println("You don't have any health potions to drink.");
-					if(hp >= 100)System.out.println("You're healthy enough.");
+					if(hp >= maxhp)System.out.println("You're healthy enough.");
 				}
 				invaction();
 				break;
