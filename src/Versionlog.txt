@@ -91,6 +91,18 @@ Fixed the potion script reset
 Fixed the invalid response loop
 Cut a large portion of exess code
 
+Alpha 0.3.3 2021-03-26
+Tweaked the git to not include the bin folder
+Added sleep to hub shop
+Tweaked the wiztower/alchem inputs 
+Tweaked the potion generation to generate a random name
+Added the leveling system (needs fixing)
+Added a few more stats in player stats
+Adjusted the hppotions to accept maxhealth
+Added The Crossroads
+
+
+
 
 
 

@@ -245,6 +245,7 @@ public class Levels {
 		if(Engine.devmode == true) System.out.println("	Debug: StartMenu passed");
 		
 			// Cadet dungeon check
+		
 		if(Progresslog.cadetplaytime < 3) {
 			System.out.println("You seem to be new at the game. Would you like to play through a more tailored experience,\n"
 					+ "which is designed for inexperienced players and introduces you to the game's mechanics?");
@@ -254,6 +255,7 @@ public class Levels {
 				System.out.println("Alright then.");
 				Dungeoncadet();
 			} else DungeonGen();			
-		} else DungeonGen();		
+		} else DungeonGen();	
+		
 	}
 }

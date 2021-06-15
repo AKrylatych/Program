@@ -34,9 +34,9 @@ public class Engine {
 		Scanner input = new Scanner(System.in);
 		String multiresponse;
 		int excessxp;
-		boolean validresponse = false;
+		boolean validresponse;
 		
-		do { // fix levelling
+		do { // TODO fix levelling
 			if(devmode == true) {
 				System.out.println("	Playerlevel: " + Inventory.playerlevel);
 				System.out.println("	xpgain: " + xpgain);
@@ -58,6 +58,7 @@ public class Engine {
 				
 				multiresponse = input.nextLine();
 				do {
+					validresponse = true;
 					switch(multiresponse) {
 					case "1":
 						Inventory.maxhp  += 20;
@@ -72,8 +73,8 @@ public class Engine {
 						validresponse = false;
 						break;
 					}
+					System.out.println("xp response");
 				} while (validresponse = false);
-				validresponse = true;
 				
 			} else {
 				Inventory.playerxp += xpgain;
